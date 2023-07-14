@@ -1,0 +1,25 @@
+{
+    "scripts": {
+        "dfx_install": "DFX_VERSION=0.14.0 sh -ci \"$(curl -fsSL https://sdk.dfinity.org/install.sh)\"",
+        "replica_start": "dfx start --background",
+        "replica_stop": "dfx stop",
+        "canister_deploy_local": "dfx deploy note-taking",
+        "canister_deploy_mainnet": "dfx deploy --network ic note-taking",
+        "canister_uninstall": "dfx canister uninstall-code note-taking",
+        "canister_call_get_message": "dfx canister call note-taking getMessage",
+        "canister_call_set_message": "dfx canister call note-taking setMessage '(\"Hello world!\")'"
+    },
+    "dependencies": {
+        "@dfinity/agent": "^0.18.0",
+        "@dfinity/candid": "^0.15.6",
+        "@dfinity/principal": "^0.18.0",
+        "azle": "^0.16.3",
+        "uuid": "^9.0.0"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/uuid": "^9.0.1"
+    }
+}

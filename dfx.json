@@ -1,0 +1,13 @@
+{
+    "canisters": {
+        "note-taking": {
+            "type": "custom",
+            "build": "npx azle note-taking",
+            "root": "src",
+            "ts": "src/index.ts",
+            "candid": "src/index.did",
+            "wasm": ".azle/note-taking/note-taking.wasm.gz"
+        }
+    }
+}
+
