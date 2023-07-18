@@ -1,6 +1,7 @@
 import { $query, $update, Record, StableBTreeMap, Vec, match, Result, nat64, ic, Opt, Principal } from 'azle';
 import { v4 as uuidv4 } from 'uuid';
 
+
 type Note = Record<{
     owner: Principal;
     id: string;
@@ -8,9 +9,9 @@ type Note = Record<{
     content: string;
     created_at: nat64;
     updated_at: Opt<nat64>;
-    tags: Vec<String>;
-    archived?: boolean;
-    favorite?: boolean;
+    tags: Vec<string>;
+    archived:  Opt<boolean>;
+    favorite: Opt<boolean>;
 }>;
 
 type NotePayload = Record<{
@@ -76,21 +77,23 @@ export function addTagsToNote(
 // Allows users to create and add a note
 $update
 export function addNote(payload: NotePayload): Result<Note, string> {
-
-    const err = checkPayload(payload);
-    if (err.length > 0) {
-        return Result.Err<Note, string>(err);
+    try {
+        const note: Note = {
+            owner: ic.caller(),
+            id: uuidv4(),
+            created_at: ic.time(),
+            updated_at: Opt.None,
+            tags:[],
+            archived: Opt.Some(false),
+             favorite: Opt.Some(false),
+            ...payload,
+        };
+        notesStorage.insert(note.id, note);
+        return Result.Ok<Note,string>(note);
+    } catch (error) {
+        return Result.Err<Note,string>("Problem with adding the Note");
     }
-    const note: Note = {
-        owner: ic.caller(),
-        id: uuidv4(),
-        created_at: ic.time(),
-        updated_at: Opt.None,
-        tags:[],
-        ...payload,
-    };
-    notesStorage.insert(note.id, note);
-    return Result.Ok(note);
+    
 }
 
 // Allows users to update the content and/or title of their notes
@@ -153,7 +156,7 @@ export function archiveNote(id: string): Result<Note, string> {
             if (note.owner.toString() !== ic.caller().toString()) {
                 return Result.Err<Note, string>('You are not the owner of this note');
             }
-            const archivedNote: Note = { ...note, archived: true };
+            const archivedNote: Note = { ...note, archived: Opt.Some(true) };
             notesStorage.insert(note.id, archivedNote);
             return Result.Ok<Note, string>(archivedNote);
         },
@@ -169,7 +172,7 @@ export function unarchiveNote(id: string): Result<Note, string> {
             if (note.owner.toString() !== ic.caller().toString()) {
                 return Result.Err<Note, string>('You are not the owner of this note');
             }
-            const unarchivedNote: Note = { ...note, archived: false };
+            const unarchivedNote: Note = { ...note, archived: Opt.Some(false) };
             notesStorage.insert(note.id, unarchivedNote);
             return Result.Ok<Note, string>(unarchivedNote);
         },
@@ -186,7 +189,7 @@ export function favoriteNote(id: string): Result<Note, string> {
             if (note.owner.toString() !== ic.caller().toString()) {
                 return Result.Err<Note, string>('You are not the owner of this note');
             }
-            const favoriteNote: Note = { ...note, favorite: true };
+            const favoriteNote: Note = { ...note, favorite: Opt.Some(true) };
             notesStorage.insert(note.id, favoriteNote);
             return Result.Ok<Note, string>(favoriteNote);
         },
@@ -203,7 +206,7 @@ export function unfavoriteNote(id: string): Result<Note, string> {
             if (note.owner.toString() !== ic.caller().toString()) {
                 return Result.Err<Note, string>('You are not the owner of this note');
             }
-            const unfavoriteNote: Note = { ...note, favorite: false };
+            const unfavoriteNote: Note = { ...note, favorite: Opt.Some(true) };
             notesStorage.insert(note.id, unfavoriteNote);
             return Result.Ok<Note, string>(unfavoriteNote);
         },

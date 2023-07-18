@@ -6,8 +6,8 @@ type Note = record {
   owner : principal;
   tags : vec text;
   created_at : nat64;
-  archived : bool;
-  favorite : bool;
+  archived : opt bool;
+  favorite : opt bool;
 };
 type NotePayload = record { title : text; content : text };
 type _AzleResult = variant { Ok : Note; Err : text };
