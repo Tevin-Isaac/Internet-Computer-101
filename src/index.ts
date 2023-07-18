@@ -8,7 +8,7 @@ type Note = Record<{
     content: string;
     created_at: nat64;
     updated_at: Opt<nat64>;
-    tags: string[];
+    tags: Vec<String>;
     archived?: boolean;
     favorite?: boolean;
 }>;
@@ -57,7 +57,7 @@ export function getNotesByTag(tag: string): Result<Vec<Note>, string> {
 $update
 export function addTagsToNote(
     id: string,
-    tags: string[]
+    tags: Vec<string>
 ): Result<Note, string> {
     return match(notesStorage.get(id), {
         Some: (note) => {
@@ -76,6 +76,7 @@ export function addTagsToNote(
 // Allows users to create and add a note
 $update
 export function addNote(payload: NotePayload): Result<Note, string> {
+
     const err = checkPayload(payload);
     if (err.length > 0) {
         return Result.Err<Note, string>(err);
@@ -85,7 +86,7 @@ export function addNote(payload: NotePayload): Result<Note, string> {
         id: uuidv4(),
         created_at: ic.time(),
         updated_at: Opt.None,
-        tags: [],
+        tags:[],
         ...payload,
     };
     notesStorage.insert(note.id, note);
@@ -223,6 +224,7 @@ function checkPayload(payload: NotePayload): string {
 
 // UUID workaround
 globalThis.crypto = {
+    //@ts-ignore
     getRandomValues: () => {
         let array = new Uint8Array(32);
 

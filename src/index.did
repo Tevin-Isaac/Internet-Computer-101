@@ -1,0 +1,28 @@
+type Note = record {
+  id : text;
+  title : text;
+  updated_at : opt nat64;
+  content : text;
+  owner : principal;
+  tags : vec text;
+  created_at : nat64;
+  archived : bool;
+  favorite : bool;
+};
+type NotePayload = record { title : text; content : text };
+type _AzleResult = variant { Ok : Note; Err : text };
+type _AzleResult_1 = variant { Ok : vec Note; Err : text };
+service : () -> {
+  addNote : (NotePayload) -> (_AzleResult);
+  addTagsToNote : (text, vec text) -> (_AzleResult);
+  archiveNote : (text) -> (_AzleResult);
+  deleteNote : (text) -> (_AzleResult);
+  favoriteNote : (text) -> (_AzleResult);
+  getNote : (text) -> (_AzleResult) query;
+  getNotes : (float64, float64) -> (_AzleResult_1) query;
+  getNotesByTag : (text) -> (_AzleResult_1) query;
+  searchNotes : (text) -> (_AzleResult_1) query;
+  unarchiveNote : (text) -> (_AzleResult);
+  unfavoriteNote : (text) -> (_AzleResult);
+  updateNote : (text, NotePayload) -> (_AzleResult);
+}
