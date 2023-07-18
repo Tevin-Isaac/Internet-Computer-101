@@ -45,3 +45,12 @@ The note-taking application provides the following features:
 * *avoriteNote(id): Marks a specific note as a favorite for the caller.
 
 * unfavoriteNote(id): Removes the favorite status from a specific note for the caller.
+
+
+# RUN LOCALLY
+
+1. Run `npm install`.
+2. Make sure you have DFX installed, if not install from here [installation](https://demergent-labs.github.io/azle/installation.html).
+3. Run `dfx start --background` to get dfx started.
+4. Run `dfx deploy` to deploy the code(First time takes several minutes so have patience).
+5. Now you can interact using the dfx cli or the web interface(link will be visible after deployment).
