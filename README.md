@@ -42,7 +42,7 @@ The note-taking application provides the following features:
 
 * unarchiveNote(id): Unarchives a specific note owned by the caller.
 
-* *avoriteNote(id): Marks a specific note as a favorite for the caller.
+* FavoriteNote(id): Marks a specific note as a favorite for the caller.
 
 * unfavoriteNote(id): Removes the favorite status from a specific note for the caller.
 
